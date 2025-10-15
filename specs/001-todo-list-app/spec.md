@@ -15,6 +15,15 @@ Each todo should have a title and completion status.
 
 The interface should look clean and modern."
 
+## Clarifications
+
+### Session 2025-10-15
+
+- Q: What is the maximum allowed length for a todo title? → A: 200 characters maximum
+- Q: How should the system handle duplicate todo titles? → A: Allow duplicate titles (no restriction)
+- Q: Should there be confirmation before deleting a todo? → A: No confirmation (immediate delete)
+- Q: How should the system handle rapid repeated clicks on the same todo's toggle? → A: Allow all toggles (process every click)
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - View All Todos (Priority: P1)
@@ -84,10 +93,7 @@ A user can permanently remove todos from their list by clicking a delete button 
 ### Edge Cases
 
 - What happens when a user tries to add a todo with only whitespace characters?
-- What happens when a user rapidly clicks the toggle button multiple times on the same todo?
-- What happens when a user accidentally clicks delete?
-- How does the system handle very long todo titles (100+ characters)?
-- What happens if a user tries to add a duplicate todo title?
+- How does the system handle todo titles exceeding 200 characters?
 
 ## Requirements *(mandatory)*
 
@@ -97,10 +103,13 @@ A user can permanently remove todos from their list by clicking a delete button 
 - **FR-002**: System MUST provide an input form for users to enter new todo titles
 - **FR-003**: System MUST create new todos with incomplete status by default when submitted via the form
 - **FR-004**: System MUST prevent creation of todos with empty or whitespace-only titles
+- **FR-013**: System MUST enforce a maximum title length of 200 characters
+- **FR-014**: System MUST allow creation of todos with duplicate titles (no uniqueness constraint)
 - **FR-005**: System MUST allow users to toggle completion status by clicking on a todo item
+- **FR-015**: System MUST process all toggle clicks immediately without debouncing or click prevention
 - **FR-006**: System MUST visually distinguish between complete and incomplete todos
 - **FR-007**: System MUST provide a delete button for each todo item
-- **FR-008**: System MUST permanently remove todos when the delete button is clicked
+- **FR-008**: System MUST permanently remove todos when the delete button is clicked without requiring confirmation
 - **FR-009**: System MUST persist todo data so changes survive page refreshes
 - **FR-010**: System MUST display an appropriate empty state when no todos exist
 - **FR-011**: System MUST clear the input form after successfully adding a todo
@@ -129,5 +138,6 @@ A user can permanently remove todos from their list by clicking a delete button 
 - No multi-device sync is required
 - Application will be used on desktop browsers primarily (mobile optimization out of scope)
 - No undo functionality required for deletions
+- No confirmation dialogs required for any operations
 - Todos will be ordered by creation time (newest last)
 - Maximum of 100 todos expected per user (no pagination required)
