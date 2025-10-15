@@ -34,18 +34,18 @@ Where:
 
 **Tasks**:
 
-- [ ] T001 [P] Create directory structure src/backend/ and src/frontend/
-- [ ] T002 [P] Create requirements.txt in src/backend/requirements.txt with dependencies: fastapi==0.104.1, uvicorn[standard]==0.24.0, supabase==2.0.3, python-dotenv==1.0.0, pydantic-settings==2.0.3
-- [ ] T003 Create Python virtual environment and install dependencies in src/backend/
-- [ ] T004 Create .env file template in src/backend/.env with SUPABASE_URL and SUPABASE_KEY placeholders
-- [ ] T005 Add src/backend/.env to .gitignore to prevent committing credentials
+- [X] T001 [P] Create directory structure src/backend/ and src/frontend/
+- [X] T002 [P] Create requirements.txt in src/backend/requirements.txt with dependencies: fastapi==0.104.1, uvicorn[standard]==0.24.0, supabase==2.0.3, python-dotenv==1.0.0, pydantic-settings==2.0.3
+- [X] T003 Create Python virtual environment and install dependencies in src/backend/
+- [X] T004 Create .env file template in src/backend/.env with SUPABASE_URL and SUPABASE_KEY placeholders
+- [X] T005 Add src/backend/.env to .gitignore to prevent committing credentials
 
 **Completion Criteria**:
-- [ ] Directory structure matches constitution: src/backend/ and src/frontend/ exist
-- [ ] requirements.txt contains all 5 dependencies
-- [ ] Virtual environment created and dependencies installed without errors
-- [ ] .env file exists with placeholder values
-- [ ] .env is in .gitignore
+- [X] Directory structure matches constitution: src/backend/ and src/frontend/ exist
+- [X] requirements.txt contains all 5 dependencies
+- [X] Virtual environment created and dependencies installed without errors
+- [X] .env file exists with placeholder values
+- [X] .env is in .gitignore
 
 ---
 
