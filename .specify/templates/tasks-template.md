@@ -7,7 +7,7 @@ description: "Task list template for feature implementation"
 **Input**: Design documents from `/specs/[###-feature-name]/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
+**Tests**: Per Constitution Principle V (Workshop Demo Scope), automated testing is OUT OF SCOPE. Do NOT include test tasks. Manual browser testing only.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -16,11 +16,12 @@ description: "Task list template for feature implementation"
 - **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
 - Include exact file paths in descriptions
 
-## Path Conventions
-- **Single project**: `src/`, `tests/` at repository root
-- **Web app**: `backend/src/`, `frontend/src/`
-- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
-- Paths shown below assume single project - adjust based on plan.md structure
+## Path Conventions (Constitution-Mandated)
+- **Backend**: `src/backend/main.py` (single file for all FastAPI routes)
+- **Database**: `src/backend/database.py` (Supabase client initialization)
+- **Frontend**: `src/frontend/index.html` (single file with inline JavaScript)
+- **Dependencies**: `src/backend/requirements.txt`
+- **No test directories** (testing out of scope per Constitution V)
 
 <!-- 
   ============================================================================
@@ -43,11 +44,12 @@ description: "Task list template for feature implementation"
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-**Purpose**: Project initialization and basic structure
+**Purpose**: Project initialization and basic structure per constitution
 
-- [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize [language] project with [framework] dependencies
-- [ ] T003 [P] Configure linting and formatting tools
+- [ ] T001 Create src/backend/ and src/frontend/ directory structure
+- [ ] T002 Create src/backend/requirements.txt with fastapi, supabase-py, uvicorn
+- [ ] T003 Initialize Supabase project and obtain SUPABASE_URL and SUPABASE_KEY
+- [ ] T004 [P] Create src/backend/database.py with Supabase client initialization
 
 ---
 
@@ -56,17 +58,22 @@ description: "Task list template for feature implementation"
 **Purpose**: Core infrastructure that MUST be complete before ANY user story can be implemented
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
+**🔧 SUPABASE MCP REQUIRED**: Database schema MUST be created via Supabase MCP server before implementation (Constitution III)
 
-Examples of foundational tasks (adjust based on your project):
+Foundational tasks (adjust based on your feature requirements):
 
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
-- [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
+- [ ] T005 **[MCP REQUIRED]** Use Supabase MCP server to create database tables and schema
+- [ ] T006 **[MCP REQUIRED]** Verify table structures and relationships via Supabase MCP inspection
+- [ ] T007 [P] Create src/backend/main.py with FastAPI app initialization and CORS
+- [ ] T008 [P] Create src/frontend/index.html with Tailwind CSS CDN and basic HTML structure
+- [ ] T009 Add environment variable handling for SUPABASE_URL and SUPABASE_KEY
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
+
+**Constitution Notes**:
+- No authentication/authorization (Constitution V - Workshop Demo Scope)
+- No automated test setup (Constitution V - out of scope)
+- Database schema created via MCP server BEFORE writing application code (Constitution III - NON-NEGOTIABLE)
 
 ---
 
@@ -74,25 +81,21 @@ Examples of foundational tasks (adjust based on your project):
 
 **Goal**: [Brief description of what this story delivers]
 
-**Independent Test**: [How to verify this story works on its own]
-
-### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
-
-**NOTE: Write these tests FIRST, ensure they FAIL before implementation**
-
-- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+**Independent Test**: Manual browser testing - [How to verify this story works on its own]
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
-- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+**Constitution Reminder**: All code in single files (main.py for backend, index.html for frontend)
 
-**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
+- [ ] T010 [US1] Add FastAPI route for [operation] in src/backend/main.py with type hints and docstring
+- [ ] T011 [US1] Implement Supabase query using supabase.table() methods in src/backend/main.py
+- [ ] T012 [US1] Add try/catch error handling for [operation] route
+- [ ] T013 [US1] Add HTML UI section for [feature] in src/frontend/index.html
+- [ ] T014 [US1] Add JavaScript fetch() call to backend endpoint (with comments) in src/frontend/index.html
+- [ ] T015 [US1] Add Tailwind CSS styling for [feature] UI components
+- [ ] T016 [US1] Manual browser test: [specific test scenario]
+
+**Checkpoint**: At this point, User Story 1 should be fully functional and testable manually in browser
 
 ---
 
@@ -100,21 +103,21 @@ Examples of foundational tasks (adjust based on your project):
 
 **Goal**: [Brief description of what this story delivers]
 
-**Independent Test**: [How to verify this story works on its own]
-
-### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
-
-- [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
+**Independent Test**: Manual browser testing - [How to verify this story works on its own]
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Create [Entity] model in src/models/[entity].py
-- [ ] T021 [US2] Implement [Service] in src/services/[service].py
-- [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T023 [US2] Integrate with User Story 1 components (if needed)
+**Constitution Reminder**: All code in single files (main.py for backend, index.html for frontend)
 
-**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
+- [ ] T017 [US2] Add FastAPI route for [operation] in src/backend/main.py with type hints and docstring
+- [ ] T018 [US2] Implement Supabase query using supabase.table() methods in src/backend/main.py
+- [ ] T019 [US2] Add try/catch error handling for [operation] route
+- [ ] T020 [US2] Add HTML UI section for [feature] in src/frontend/index.html
+- [ ] T021 [US2] Add JavaScript fetch() call to backend endpoint (with comments) in src/frontend/index.html
+- [ ] T022 [US2] Add Tailwind CSS styling for [feature] UI components
+- [ ] T023 [US2] Manual browser test: [specific test scenario]
+
+**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently in browser
 
 ---
 
@@ -122,20 +125,21 @@ Examples of foundational tasks (adjust based on your project):
 
 **Goal**: [Brief description of what this story delivers]
 
-**Independent Test**: [How to verify this story works on its own]
-
-### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
-
-- [ ] T024 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
+**Independent Test**: Manual browser testing - [How to verify this story works on its own]
 
 ### Implementation for User Story 3
 
-- [ ] T026 [P] [US3] Create [Entity] model in src/models/[entity].py
-- [ ] T027 [US3] Implement [Service] in src/services/[service].py
-- [ ] T028 [US3] Implement [endpoint/feature] in src/[location]/[file].py
+**Constitution Reminder**: All code in single files (main.py for backend, index.html for frontend)
 
-**Checkpoint**: All user stories should now be independently functional
+- [ ] T024 [US3] Add FastAPI route for [operation] in src/backend/main.py with type hints and docstring
+- [ ] T025 [US3] Implement Supabase query using supabase.table() methods in src/backend/main.py
+- [ ] T026 [US3] Add try/catch error handling for [operation] route
+- [ ] T027 [US3] Add HTML UI section for [feature] in src/frontend/index.html
+- [ ] T028 [US3] Add JavaScript fetch() call to backend endpoint (with comments) in src/frontend/index.html
+- [ ] T029 [US3] Add Tailwind CSS styling for [feature] UI components
+- [ ] T030 [US3] Manual browser test: [specific test scenario]
+
+**Checkpoint**: All user stories should now be independently functional in browser
 
 ---
 
@@ -145,14 +149,16 @@ Examples of foundational tasks (adjust based on your project):
 
 ## Phase N: Polish & Cross-Cutting Concerns
 
-**Purpose**: Improvements that affect multiple user stories
+**Purpose**: Final touches and code clarity improvements
 
-- [ ] TXXX [P] Documentation updates in docs/
-- [ ] TXXX Code cleanup and refactoring
-- [ ] TXXX Performance optimization across all stories
-- [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
-- [ ] TXXX Security hardening
-- [ ] TXXX Run quickstart.md validation
+**Constitution Reminder**: No production concerns, no automated testing, no authentication
+
+- [ ] TXXX Review all Python functions for type hints and docstrings (Constitution IV)
+- [ ] TXXX Review all JavaScript for API call comments (Constitution IV)
+- [ ] TXXX Verify all Supabase queries use supabase.table() methods (Constitution III)
+- [ ] TXXX Manual browser testing across all user stories
+- [ ] TXXX Code readability review (Constitution IV - clarity over cleverness)
+- [ ] TXXX Verify single-file architecture maintained (Constitution I)
 
 ---
 
@@ -175,11 +181,11 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Within Each User Story
 
-- Tests (if included) MUST be written and FAIL before implementation
-- Models before services
-- Services before endpoints
-- Core implementation before integration
-- Story complete before moving to next priority
+- **NO automated tests** (Constitution V - Workshop Demo Scope)
+- Database schema (via Supabase MCP) before application code (Constitution III - NON-NEGOTIABLE)
+- Backend routes before frontend UI
+- Inline JavaScript after HTML structure
+- Manual browser testing after each story implementation
 
 ### Parallel Opportunities
 
@@ -195,14 +201,16 @@ Examples of foundational tasks (adjust based on your project):
 ## Parallel Example: User Story 1
 
 ```bash
-# Launch all tests for User Story 1 together (if tests requested):
-Task: "Contract test for [endpoint] in tests/contract/test_[name].py"
-Task: "Integration test for [user journey] in tests/integration/test_[name].py"
+# Example: Multiple backend routes that don't conflict can be added in parallel:
+Task: "Add FastAPI GET route for [resource] in src/backend/main.py"
+Task: "Add FastAPI POST route for [resource] in src/backend/main.py"
 
-# Launch all models for User Story 1 together:
-Task: "Create [Entity1] model in src/models/[entity1].py"
-Task: "Create [Entity2] model in src/models/[entity2].py"
+# Example: UI sections and styling can be worked on in parallel (if by different people):
+Task: "Add HTML structure for [feature] in src/frontend/index.html"
+Task: "Add Tailwind CSS classes for [feature] in src/frontend/index.html"
 ```
+
+**Note**: In practice, parallel work is limited by single-file architecture. Most tasks will be sequential within each file.
 
 ---
 
@@ -239,13 +247,15 @@ With multiple developers:
 
 ## Notes
 
-- [P] tasks = different files, no dependencies
+- [P] tasks = different files/sections, no dependencies (limited in single-file architecture)
 - [Story] label maps task to specific user story for traceability
-- Each user story should be independently completable and testable
-- Verify tests fail before implementing
+- Each user story should be independently completable and testable via browser
+- **NO automated tests** - manual browser testing only (Constitution V)
+- **Database schema via Supabase MCP FIRST** before any application code (Constitution III - NON-NEGOTIABLE)
+- All code clarity requirements: type hints, docstrings, comments (Constitution IV)
 - Commit after each task or logical group
-- Stop at any checkpoint to validate story independently
-- Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence
+- Stop at any checkpoint to validate story independently in browser
+- Avoid: vague tasks, cross-story dependencies that break independence, adding build tools or frameworks
 
 
 

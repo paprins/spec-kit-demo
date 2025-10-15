@@ -17,21 +17,47 @@
   the iteration process.
 -->
 
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: Python 3.12
+**Primary Dependencies**: FastAPI, supabase-py, uvicorn
+**Storage**: Supabase (PostgreSQL with REST API)
+**Testing**: None (workshop demo - manual testing only per Constitution V)
+**Target Platform**: Local development server (workshop demo)
+**Project Type**: Simple CRUD web application (constitution-mandated structure)
+**Performance Goals**: N/A (workshop demo scope)
+**Constraints**: Single-file backend (main.py), single-file frontend (index.html), no build tools
+**Scale/Scope**: Workshop demonstration - small dataset, single user, local development
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**I. Simplicity First**
+- ✓ Backend uses single main.py file
+- ✓ Frontend uses single index.html file with inline JavaScript
+- ✓ No build tools, npm, bundlers, or compilation steps
+
+**II. Technology Stack Constraints**
+- ✓ Backend: FastAPI with Python 3.12
+- ✓ Frontend: Plain HTML + Tailwind CSS (CDN only)
+- ✓ Database: Supabase
+- ✓ No JavaScript frameworks (React/Vue/Angular)
+
+**III. Supabase-First Database Workflow**
+- ✓ Supabase MCP server used for schema creation before implementation
+- ✓ Database schema validated via MCP tools
+- ✓ Application uses supabase-py client library
+- ✓ No raw SQL strings in application code
+
+**IV. Code Clarity**
+- ✓ Python: Type hints on all functions
+- ✓ Python: Docstrings for non-trivial functions
+- ✓ JavaScript: Comments for API calls and DOM manipulations
+
+**V. Workshop Demo Scope**
+- ✓ No authentication/authorization
+- ✓ No automated testing
+- ✓ Basic try/catch error handling only
+- ✓ No production deployment considerations
 
 ## Project Structure
 
@@ -48,51 +74,24 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
+
+**Constitution-mandated structure for Simple CRUD Web Application:**
 
 ```
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
 src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
-│   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+├── backend/
+│   ├── main.py          # FastAPI application with all routes
+│   ├── database.py      # Supabase client initialization
+│   └── requirements.txt # Python dependencies (fastapi, supabase-py, uvicorn)
+└── frontend/
+    └── index.html       # Complete UI with inline JavaScript and Tailwind CDN
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: This project follows the Simple CRUD Web Application structure mandated by the constitution. The structure enforces:
+- Single main.py for all backend logic
+- Single index.html for all frontend code
+- No test directories (testing explicitly out of scope per Constitution Principle V)
+- No build tooling or transpilation steps
 
 ## Complexity Tracking
 
