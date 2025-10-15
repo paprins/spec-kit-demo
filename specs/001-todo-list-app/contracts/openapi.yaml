@@ -1,0 +1,341 @@
+openapi: 3.0.3
+info:
+  title: Todo List API
+  description: |
+    RESTful API for a simple todo list application built with FastAPI and Supabase.
+
+    This API provides CRUD operations for managing todo items with title and completion status.
+    Designed as a workshop demonstration following single-file architecture principles.
+  version: 1.0.0
+  contact:
+    name: Todo List API Support
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+
+tags:
+  - name: todos
+    description: Todo item operations
+
+paths:
+  /todos:
+    get:
+      tags:
+        - todos
+      summary: Get all todos
+      description: |
+        Retrieve all todo items from the database ordered by creation time (oldest first).
+
+        Corresponds to FR-001: System MUST display all existing todos in a list format.
+      operationId: getTodos
+      responses:
+        '200':
+          description: Successful response with list of todos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+              examples:
+                empty:
+                  summary: No todos exist
+                  value: []
+                with_todos:
+                  summary: Multiple todos
+                  value:
+                    - id: "550e8400-e29b-41d4-a716-446655440000"
+                      title: "Buy groceries"
+                      completed: false
+                      created_at: "2025-10-15T10:30:00Z"
+                    - id: "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
+                      title: "Finish documentation"
+                      completed: true
+                      created_at: "2025-10-15T11:45:00Z"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags:
+        - todos
+      summary: Create a new todo
+      description: |
+        Create a new todo item with the provided title. The todo is created with incomplete status by default.
+
+        Corresponds to:
+        - FR-002: System MUST provide an input form for users to enter new todo titles
+        - FR-003: System MUST create new todos with incomplete status by default
+        - FR-004: System MUST prevent creation of todos with empty or whitespace-only titles
+        - FR-013: System MUST enforce a maximum title length of 200 characters
+        - FR-014: System MUST allow creation of todos with duplicate titles
+      operationId: createTodo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoCreate'
+            examples:
+              valid:
+                summary: Valid todo creation
+                value:
+                  title: "Call dentist for appointment"
+              max_length:
+                summary: Maximum length title (200 chars)
+                value:
+                  title: "This is a very long todo title that approaches the maximum allowed length of two hundred characters to test the validation logic and ensure it works correctly when users enter lengthy task descriptions"
+      responses:
+        '201':
+          description: Todo created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+              example:
+                id: "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+                title: "Call dentist for appointment"
+                completed: false
+                created_at: "2025-10-15T14:20:00Z"
+        '422':
+          description: Validation error (empty title, whitespace only, or exceeds 200 chars)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                empty_title:
+                  summary: Empty title rejected
+                  value:
+                    detail:
+                      - loc: ["body", "title"]
+                        msg: "Title cannot be empty or whitespace only"
+                        type: "value_error"
+                too_long:
+                  summary: Title exceeds 200 characters
+                  value:
+                    detail:
+                      - loc: ["body", "title"]
+                        msg: "ensure this value has at most 200 characters"
+                        type: "value_error.any_str.max_length"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /todos/{todo_id}:
+    patch:
+      tags:
+        - todos
+      summary: Update a todo
+      description: |
+        Update a todo's completion status or title. Only provided fields are updated (PATCH semantics).
+
+        Corresponds to:
+        - FR-005: System MUST allow users to toggle completion status by clicking on a todo item
+        - FR-015: System MUST process all toggle clicks immediately without debouncing
+      operationId: updateTodo
+      parameters:
+        - name: todo_id
+          in: path
+          required: true
+          description: UUID of the todo to update
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoUpdate'
+            examples:
+              toggle_complete:
+                summary: Mark todo as complete
+                value:
+                  completed: true
+              toggle_incomplete:
+                summary: Mark todo as incomplete
+                value:
+                  completed: false
+              update_title:
+                summary: Update title only
+                value:
+                  title: "Buy groceries and cook dinner"
+              update_both:
+                summary: Update both title and completion
+                value:
+                  title: "Buy groceries and cook dinner"
+                  completed: true
+      responses:
+        '200':
+          description: Todo updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+              example:
+                id: "550e8400-e29b-41d4-a716-446655440000"
+                title: "Buy groceries"
+                completed: true
+                created_at: "2025-10-15T10:30:00Z"
+        '404':
+          description: Todo not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                detail: "Todo not found"
+        '422':
+          description: Validation error (invalid title)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags:
+        - todos
+      summary: Delete a todo
+      description: |
+        Permanently delete a todo from the database. No confirmation required.
+
+        Corresponds to:
+        - FR-007: System MUST provide a delete button for each todo item
+        - FR-008: System MUST permanently remove todos when delete button is clicked without requiring confirmation
+      operationId: deleteTodo
+      parameters:
+        - name: todo_id
+          in: path
+          required: true
+          description: UUID of the todo to delete
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '204':
+          description: Todo deleted successfully (no content returned)
+        '404':
+          description: Todo not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                detail: "Todo not found"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    TodoBase:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: The todo item's text content (1-200 characters, cannot be empty or whitespace-only)
+          example: "Buy groceries"
+
+    TodoCreate:
+      allOf:
+        - $ref: '#/components/schemas/TodoBase'
+      required:
+        - title
+      description: Schema for creating a new todo (POST /todos request body)
+
+    TodoUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: Updated todo title (optional)
+          example: "Buy groceries and cook dinner"
+        completed:
+          type: boolean
+          description: Updated completion status (optional)
+          example: true
+      description: |
+        Schema for updating a todo (PATCH /todos/{id} request body).
+        Only provided fields will be updated (PATCH semantics).
+
+    Todo:
+      allOf:
+        - $ref: '#/components/schemas/TodoBase'
+      type: object
+      required:
+        - id
+        - title
+        - completed
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the todo
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        completed:
+          type: boolean
+          description: Whether the todo is marked as complete
+          example: false
+        created_at:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp when the todo was created
+          example: "2025-10-15T10:30:00Z"
+      description: Complete todo model (API response for GET, POST, PATCH)
+
+    Error:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+          description: Human-readable error message
+          example: "Todo not found"
+
+    ValidationError:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: array
+          items:
+            type: object
+            properties:
+              loc:
+                type: array
+                items:
+                  type: string
+                description: Location of the validation error (e.g., ["body", "title"])
+              msg:
+                type: string
+                description: Human-readable error message
+              type:
+                type: string
+                description: Error type identifier
+          description: List of validation errors from FastAPI/Pydantic
